@@ -87,7 +87,7 @@ exports.set = (req, res) => {
  * @param {object} res Cloud Function response context.
  */
 exports.get = (req, res) => {
-  const key = getKeyFromRequestData(req.body);
+  const key = getKeyFromRequestData(req.query);
 
   return datastore.get(key)
     .then(([entity]) => {
@@ -96,7 +96,6 @@ exports.get = (req, res) => {
       if (!entity) {
         throw new Error(`No entity found for key ${key.path.join('/')}.`);
       }
-
       res.status(200).send(entity);
     })
     .catch((err) => {
