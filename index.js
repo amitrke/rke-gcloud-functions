@@ -147,24 +147,22 @@ exports.list = (req, res) => {
 
   const query = datastore.createQuery(kind);
 
-  dResponse = [];
-
-  res.set('Access-Control-Allow-Origin', "*")
-  res.set('Access-Control-Allow-Methods', 'GET, POST')
-
   datastore.runQuery(query).then(results => {
-    for (i=0; i<results[0].length; i++){
+    var dResponse = [];
+    for (var i=0; i<results[0].length; i++){
       var item = results[0][i];
       var key = item[datastore.KEY];
       item.key = key;
       dResponse.push(item);
+      console.log("Pushed item to dResponse "+JSON.stringify(item));
     }
+    res.set('Access-Control-Allow-Origin', "*")
+    res.set('Access-Control-Allow-Methods', 'GET, POST')
+    res.status(200).send(dResponse);
   })
   .catch(err => {
     console.error('ERROR:', err);
     res.status(500).send(err.message);
     return Promise.reject(err);
   });
-
-  res.status(200).sent(dResponse);
 };
