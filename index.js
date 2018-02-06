@@ -20,6 +20,9 @@ const Datastore = require('@google-cloud/datastore');
 // Instantiates a client
 const datastore = Datastore();
 
+//const gstore = require('gstore-node')();
+//gstore.connect(datastore);
+
 /**
  * Gets a Datastore key from the kind/key pair in the request.
  *
@@ -144,15 +147,24 @@ exports.list = (req, res) => {
 
   const query = datastore.createQuery(kind);
 
+  dResponse = [];
+
   res.set('Access-Control-Allow-Origin', "*")
   res.set('Access-Control-Allow-Methods', 'GET, POST')
 
   datastore.runQuery(query).then(results => {
-      res.status(200).send(results[0]);
+    for (i=0; i<results[0].length; i++){
+      var item = results[0][i];
+      var key = item[datastore.KEY];
+      item.key = key;
+      dResponse.push(item);
+    }
   })
   .catch(err => {
     console.error('ERROR:', err);
     res.status(500).send(err.message);
     return Promise.reject(err);
   });
+
+  res.status(200).sent(dResponse);
 };
