@@ -96,6 +96,9 @@ exports.get = (req, res) => {
       if (!entity) {
         throw new Error(`No entity found for key ${key.path.join('/')}.`);
       }
+
+      res.set('Access-Control-Allow-Origin', "*")
+      res.set('Access-Control-Allow-Methods', 'GET, POST')
       res.status(200).send(entity);
     })
     .catch((err) => {
@@ -144,6 +147,9 @@ exports.list = (req, res) => {
   const select = req.body.select;
 
   const query = datastore.createQuery(kind);
+
+  res.set('Access-Control-Allow-Origin', "*")
+  res.set('Access-Control-Allow-Methods', 'GET, POST')
 
   datastore.runQuery(query).then(results => {
       res.status(200).send(results[0]);
