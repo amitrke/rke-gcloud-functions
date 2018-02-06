@@ -136,15 +136,11 @@ exports.del = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  if (!req.body.kind) {
+  if (!req.query.kind) {
       throw new Error('Kind not provided. Make sure you have a "kind" property in your request :'+req);
   }
-  if (!req.body.select) {
-      throw new Error('Select not provided. Make sure you have a "select" property in your request');
-  }
 
-  const kind = req.body.kind;
-  const select = req.body.select;
+  const kind = req.query.kind;
 
   const query = datastore.createQuery(kind);
 
